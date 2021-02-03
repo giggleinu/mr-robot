@@ -1,26 +1,34 @@
 {
-    "compilerOptions": {
-        "allowJs": true,
-        "baseUrl": "./src",
-        "target": "ES2019",
-        "module": "commonjs",
-        "jsx": "react",
-        "sourceMap": true,
-        "removeComments": true,
-        "strict": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "skipLibCheck": true,
-        "moduleResolution": "node",
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "resolveJsonModule": true,
-        "forceConsistentCasingInFileNames": false,
-        "paths": {
-            "assets": ["assets"],
-            "components": ["components"]
-        }
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react",
+    "types": ["@emotion/react/types/css-prop"],
+    "baseUrl": "./src",
+    "paths": {
+      "@assets/*": ["assets/*"],
+      "@components/*": ["components/*"],
+      "@types": ["typings/types/index.ts"],
+      "@enums": ["typings/enums/index.ts"],
     }
+  },
+  "include": [
+    "src"
+  ]
 }

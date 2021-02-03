@@ -1,16 +1,13 @@
-import React, { FunctionComponent } from "react";
+import * as React from "react"
 
-import ReactDOM from "react-dom";
-
-const App: FunctionComponent = () => {
-    const env = process.env.NODE_ENV
-    return(
-        <div>
-            <h1>{env} Mr Robot</h1>
-        </div>
-    )
-}
+import App from "./App"
+import { ColorModeScript } from "@chakra-ui/react"
+import ReactDOM from "react-dom"
 
 ReactDOM.render(
-    <App/>, document.getElementById('root')
+  <React.StrictMode>
+    <ColorModeScript />
+    <App />
+  </React.StrictMode>,
+  document.getElementById("root"),
 )
