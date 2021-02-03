@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "baseUrl": "./src",
+        "target": "ES2019",
+        "module": "commonjs",
+        "jsx": "react",
+        "sourceMap": true,
+        "removeComments": true,
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "skipLibCheck": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "forceConsistentCasingInFileNames": false,
+        "paths": {
+            "assets": ["assets"],
+            "components": ["components"]
+        }
+    }
+}
