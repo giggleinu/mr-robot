@@ -1,6 +1,6 @@
 import { BaseCommand, Orientation } from '../typings/enums';
 
-export const BaseCommandPrint: Record<BaseCommand, string> = {
+export const BaseCommandStr: Record<BaseCommand, string> = {
     [BaseCommand.MOVE]: 'MOVE',
     [BaseCommand.LEFT]: 'LEFT',
     [BaseCommand.RIGHT]: 'RIGHT',
@@ -8,7 +8,7 @@ export const BaseCommandPrint: Record<BaseCommand, string> = {
     [BaseCommand.REPORT]: 'REPORT',
 }
 
-export const OrientationPrint: Record<Orientation, string> = {
+export const OrientationStr: Record<Orientation, string> = {
     [Orientation.NORTH]: 'NORTH',
     [Orientation.EAST]: 'EAST',
     [Orientation.SOUTH]: 'SOUTH',
