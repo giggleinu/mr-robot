@@ -1,7 +1,7 @@
-import Cardinal from './Cardinal';
-import Command from './Command';
+import BaseCommand from './BaseCommand';
+import Direction from './Direction';
 
 export {
-    Command,
-    Cardinal
+    BaseCommand,
+    Direction
 };

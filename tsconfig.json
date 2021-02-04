@@ -19,16 +19,13 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "types": ["@emotion/react/types/css-prop"],
-    "baseUrl": "./src",
-    "paths": {
-      "@assets/*": ["assets/*"],
-      "@components/*": ["components/*"],
-      "@types": ["typings/types/index.ts"],
-      "@enums": ["typings/enums/index.ts"],
-    }
+    "types": [
+      "@emotion/react/types/css-prop"
+    ]
   },
   "include": [
-    "src"
-  ]
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "extends": "./paths.json"
 }

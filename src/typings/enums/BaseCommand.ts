@@ -1,4 +1,4 @@
-enum Command {
+enum BaseCommand {
     PLACE = 'PLACE',
     MOVE = 'MOVE',
     LEFT = 'LEFT',
@@ -6,4 +6,4 @@ enum Command {
     REPORT = 'REPORT'
 }
 
-export default Command;
+export default BaseCommand;

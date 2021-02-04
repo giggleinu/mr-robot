@@ -1,8 +1,8 @@
-enum Cardinal {
+enum Direction {
     NORTH = 'NORTH',
     EAST = 'EAST',
     SOUTH = 'SOUTH',
     WEST = 'WEST'
 }
 
-export default Cardinal;
+export default Direction;
