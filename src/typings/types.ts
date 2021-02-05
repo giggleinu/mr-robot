@@ -1,5 +1,4 @@
-import { BaseCommand }  from './enums';
-import { Orientation } from './enums';
+import { BaseCommand, Error, Orientation }  from './enums';
 
 // * * * * * * * * * * Position * * * * * * * * * * //
 export interface Coordinate {
@@ -15,8 +14,7 @@ export type Position = Coordinate & Facing;
 
 // * * * * * * * * * * Commands * * * * * * * * * * //
 export interface Command {
-    command: BaseCommand;
-    errorMsg: string | null;
+    command: string;
 }
 
 export type PlaceCommand = Command & Position;
@@ -24,6 +22,6 @@ export type PlaceCommand = Command & Position;
 // * * * * * * * * * * Robot State * * * * * * * * * * //
 export interface RobotState extends Position {
     isPlaced: boolean;
-    commands: string[];
-    errorMsg: string | null;
+    commands: (Command | PlaceCommand)[];
+    error: Error | null;
 }

@@ -27,5 +27,4 @@
     "src/**/*.ts",
     "src/**/*.tsx"
   ],
-  "extends": "./paths.json"
 }
