@@ -5,33 +5,40 @@ import React from 'react';
 import { render } from './test-utils';
 
 test('renders Mr Robot app', () => {
-	render(<App />);
+    render(<App />);
+
 	const titleElement = screen.getByText(/mr robot/i);
 	expect(titleElement).toBeInTheDocument();
 });
 
 test('Command Robot to PLACE', () => {
-	render(<App />);
+    render(<App />);
+
 	const inputElement = screen.getByPlaceholderText(
 		/what should mr robot do?/i,
-	);
-	expect(inputElement).toBeInTheDocument();
-	fireEvent.change(inputElement, { target: { value: 'PLACE 3,2,NORTH' } });
-	const runCommandButton = screen.getByText(/run/i);
-	runCommandButton.click();
+    );
+
+    fireEvent.change(inputElement, { target: { value: 'PLACE 3,2,NORTH' } });
+
+	const runButton = screen.getByText(/run/i);
+    runButton.click();
+
 	const commandText = screen.getByText(/PLACE 3, 2, NORTH/);
 	expect(commandText).toBeInTheDocument();
 });
 
 test('Command Robot before PLACE', () => {
-	render(<App />);
+    render(<App />);
+
 	const inputElement = screen.getByPlaceholderText(
 		/what should mr robot do?/i,
-	);
-	expect(inputElement).toBeInTheDocument();
-	fireEvent.change(inputElement, { target: { value: 'MOVE' } });
-	const runCommandButton = screen.getByText(/run/i);
-	runCommandButton.click();
+    );
+
+    fireEvent.change(inputElement, { target: { value: 'MOVE' } });
+
+	const runButton = screen.getByText(/run/i);
+    runButton.click();
+
 	const errText = screen.getByText(/Not placed/);
 	expect(errText).toBeInTheDocument();
 });
@@ -41,18 +48,24 @@ test('MOVE Robot after PLACE', () => {
 	const inputElement = screen.getByPlaceholderText(
 		/what should mr robot do?/i,
 	);
-	expect(inputElement).toBeInTheDocument();
-	fireEvent.change(inputElement, { target: { value: 'PLACE 3,2,WEST' } });
-	const runCommandButton = screen.getByText(/run/i);
-	runCommandButton.click();
-	fireEvent.change(inputElement, { target: { value: 'MOVE' } });
-	runCommandButton.click();
-	fireEvent.change(inputElement, { target: { value: 'LEFT' } });
-	runCommandButton.click();
-	fireEvent.change(inputElement, { target: { value: 'MOVE' } });
-	runCommandButton.click();
-	fireEvent.change(inputElement, { target: { value: 'REPORT' } });
-	runCommandButton.click();
+
+    fireEvent.change(inputElement, { target: { value: 'PLACE 3,2,WEST' } });
+
+	const runButton = screen.getByText(/run/i);
+    runButton.click();
+
+    fireEvent.change(inputElement, { target: { value: 'MOVE' } });
+    runButton.click();
+
+    fireEvent.change(inputElement, { target: { value: 'LEFT' } });
+    runButton.click();
+
+    fireEvent.change(inputElement, { target: { value: 'MOVE' } });
+    runButton.click();
+
+    fireEvent.change(inputElement, { target: { value: 'REPORT' } });
+    runButton.click();
+
 	const commandText = screen.getByText(/CURRENT: 2, 1, SOUTH/);
 	expect(commandText).toBeInTheDocument();
 });
@@ -62,12 +75,63 @@ test('Command Robot to PLACE', () => {
 	const inputElement = screen.getByPlaceholderText(
 		/what should mr robot do?/i,
 	);
-	expect(inputElement).toBeInTheDocument();
-	fireEvent.change(inputElement, { target: { value: 'PLACE 0,0,SOUTH' } });
-	const runCommandButton = screen.getByText(/run/i);
-	runCommandButton.click();
+
+    fireEvent.change(inputElement, { target: { value: 'PLACE 0,0,SOUTH' } });
+
+	const runButton = screen.getByText(/run/i);
+    runButton.click();
+
 	fireEvent.change(inputElement, { target: { value: 'MOVE' } });
-	runCommandButton.click();
-	const commandText = screen.getByText(/out of bounds/i);
+    runButton.click();
+
+    const commandText = screen.getByText(/out of bounds/i);
+
 	expect(commandText).toBeInTheDocument();
+});
+
+test('Invalid command', () => {
+	render(<App />);
+	const inputElement = screen.getByPlaceholderText(
+		/what should mr robot do?/i,
+	);
+	expect(inputElement).toBeInTheDocument();
+    fireEvent.change(inputElement, { target: { value: 'PLACE 1,2,WEST' } });
+
+	const runButton = screen.getByText(/run/i);
+    runButton.click();
+
+	fireEvent.change(inputElement, { target: { value: 'BLAH' } });
+    runButton.click();
+
+    const commandText = screen.getByText(/invalid command/i);
+
+	expect(commandText).toBeInTheDocument();
+});
+
+test('Clear console and history and PLACE robot again', () => {
+	render(<App />);
+	const inputElement = screen.getByPlaceholderText(
+		/what should mr robot do?/i,
+	);
+
+    fireEvent.change(inputElement, { target: { value: 'PLACE 2,2,EAST' } });
+
+	const runButton = screen.getByText(/run/i);
+    runButton.click();
+
+	fireEvent.change(inputElement, { target: { value: 'MOVE' } });
+    runButton.click();
+
+	fireEvent.change(inputElement, { target: { value: 'LEFT' } });
+    runButton.click();
+
+    const resetButton = screen.getByText(/reset/i);
+    resetButton.click();
+
+    expect(inputElement).toHaveTextContent('');
+
+    fireEvent.change(inputElement, { target: { value: 'PLACE 3,2,NORTH' } });
+    runButton.click();
+
+    expect(screen.getByText(/PLACE 3, 2, NORTH/)).toBeInTheDocument();
 });
