@@ -26,6 +26,7 @@ const App: FunctionComponent = (): JSX.Element => {
 	const [robotState, setRobotState] = useState<RobotState>(initialRobotState);
 	const [commandInput, setCommandInput] = useState<string>('');
 	const { commands, error, facing, xPos, yPos, isPlaced } = robotState;
+	const TABLE_SIZE = 5;
 
 	const onInputChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -71,7 +72,7 @@ const App: FunctionComponent = (): JSX.Element => {
 				const inputYPos = parseInt(commandInputCleaned[2]);
 				const inputFacing = commandInputCleaned[3] as Orientation;
 
-				const withinBounds = validatePosition(inputXPos, inputYPos);
+				const withinBounds = validatePosition(inputXPos, inputYPos, TABLE_SIZE);
 				const validOrientation = Object.keys(Orientation).includes(
 					inputFacing,
 				);
@@ -145,7 +146,7 @@ const App: FunctionComponent = (): JSX.Element => {
 					default:
 				}
 
-				if (validatePosition(newCoord.xPos, newCoord.yPos)) {
+				if (validatePosition(newCoord.xPos, newCoord.yPos, TABLE_SIZE)) {
 					setRobotState({
 						...robotState,
 						error: null,

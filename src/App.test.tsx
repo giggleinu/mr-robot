@@ -43,7 +43,7 @@ test('Command Robot before PLACE', () => {
 	expect(errText).toBeInTheDocument();
 });
 
-test('MOVE Robot after PLACE', () => {
+test('Command Robot after PLACE', () => {
 	render(<App />);
 	const inputElement = screen.getByPlaceholderText(
 		/what should mr robot do?/i,
@@ -104,6 +104,22 @@ test('Invalid command', () => {
     runButton.click();
 
     const commandText = screen.getByText(/invalid command/i);
+
+	expect(commandText).toBeInTheDocument();
+});
+
+test('Invalid orienation', () => {
+	render(<App />);
+	const inputElement = screen.getByPlaceholderText(
+		/what should mr robot do?/i,
+	);
+	expect(inputElement).toBeInTheDocument();
+    fireEvent.change(inputElement, { target: { value: 'PLACE 1,2,UP' } });
+
+	const runButton = screen.getByText(/run/i);
+    runButton.click();
+
+    const commandText = screen.getByText(/invalid orientation/i);
 
 	expect(commandText).toBeInTheDocument();
 });
