@@ -43,22 +43,13 @@ const App: FunctionComponent = (): JSX.Element => {
 			(cmd) => !!cmd,
 		);
 		const inputBaseCommand = commandInputCleaned[0];
+
 		// Errors
-		const notPlaced =
-			!isPlaced && inputBaseCommand !== BaseCommandStr.PLACE;
 		const invalidBaseCommand = !Object.keys(BaseCommandStr).includes(
 			inputBaseCommand,
 		);
-		const invalidParams =
-			inputBaseCommand !== BaseCommandStr.PLACE &&
-			commandInputCleaned.length > 1;
 
-		if (notPlaced) {
-			setRobotState({
-				...robotState,
-				error: Error.NOT_PLACED,
-			});
-		} else if (invalidBaseCommand || invalidParams) {
+		if (invalidBaseCommand) {
 			setRobotState({
 				...robotState,
 				error: Error.INVALID_COMMAND,
@@ -72,7 +63,11 @@ const App: FunctionComponent = (): JSX.Element => {
 				const inputYPos = parseInt(commandInputCleaned[2]);
 				const inputFacing = commandInputCleaned[3] as Orientation;
 
-				const withinBounds = validatePosition(inputXPos, inputYPos, TABLE_SIZE);
+				const withinBounds = validatePosition(
+					inputXPos,
+					inputYPos,
+					TABLE_SIZE,
+				);
 				const validOrientation = Object.keys(Orientation).includes(
 					inputFacing,
 				);
@@ -120,38 +115,110 @@ const App: FunctionComponent = (): JSX.Element => {
 					error: Error.INVALID_PLACE_COMMAND,
 				});
 			}
-		}
+		} else {
+			// Handles non PLACE commands
+			if (!isPlaced) {
+				setRobotState({
+					...robotState,
+					error: Error.NOT_PLACED,
+				});
+			} else if (commandInputCleaned.length !== 1) {
+				setRobotState({
+					...robotState,
+					error: Error.INVALID_COMMAND,
+				});
+			} else {
+				// * * * * * * * * * * MOVE * * * * * * * * * * //
+				if (inputBaseCommand === BaseCommandStr.MOVE) {
+					const newCoord: Coordinate = {
+						xPos: xPos,
+						yPos: yPos,
+					};
+					// Check whether new coordinate is valid before updating RobotState
+					if (newCoord.yPos !== null && newCoord.xPos !== null) {
+						switch (facing) {
+							case Orientation.NORTH:
+								newCoord.yPos += 1;
+								break;
+							case Orientation.EAST:
+								newCoord.xPos += 1;
+								break;
+							case Orientation.SOUTH:
+								newCoord.yPos -= 1;
+								break;
+							case Orientation.WEST:
+								newCoord.xPos -= 1;
+								break;
+							default:
+						}
 
-		// * * * * * * * * * * MOVE * * * * * * * * * * //
-		else if (inputBaseCommand === BaseCommandStr.MOVE) {
-			const newCoord: Coordinate = {
-				xPos: xPos,
-				yPos: yPos,
-			};
-			// Check whether new coordinate is valid before updating RobotState
-			if (newCoord.yPos !== null && newCoord.xPos !== null) {
-				switch (facing) {
-					case Orientation.NORTH:
-						newCoord.yPos += 1;
-						break;
-					case Orientation.EAST:
-						newCoord.xPos += 1;
-						break;
-					case Orientation.SOUTH:
-						newCoord.yPos -= 1;
-						break;
-					case Orientation.WEST:
-						newCoord.xPos -= 1;
-						break;
-					default:
+						if (
+							validatePosition(
+								newCoord.xPos,
+								newCoord.yPos,
+								TABLE_SIZE,
+							)
+						) {
+							setRobotState({
+								...robotState,
+								error: null,
+								xPos: newCoord.xPos,
+								yPos: newCoord.yPos,
+								commands: [
+									...robotState.commands,
+									{
+										command:
+											BaseCommand[
+												inputBaseCommand as BaseCommand
+											],
+									},
+								],
+							});
+						} else
+							setRobotState({
+								...robotState,
+								error: Error.OUT_OF_BOUNDS,
+							});
+					}
 				}
 
-				if (validatePosition(newCoord.xPos, newCoord.yPos, TABLE_SIZE)) {
+				// * * * * * * * * * * REPORT * * * * * * * * * * //
+				else if (inputBaseCommand === BaseCommandStr.REPORT) {
 					setRobotState({
 						...robotState,
 						error: null,
-						xPos: newCoord.xPos,
-						yPos: newCoord.yPos,
+						commands: [
+							...robotState.commands,
+							{
+								command:
+									BaseCommand[
+										inputBaseCommand as BaseCommand
+									],
+								xPos: xPos,
+								yPos: yPos,
+								facing: facing,
+							},
+						],
+					});
+				}
+				// * * * * * * * * * * LEFT & RIGHT * * * * * * * * * * //
+				else if (
+					inputBaseCommand === BaseCommandStr.LEFT ||
+					inputBaseCommand === BaseCommandStr.RIGHT
+				) {
+					setRobotState({
+						...robotState,
+						error: null,
+						facing:
+							facing &&
+							getAdjacentOrientation(
+								facing,
+								BaseCommand[
+									inputBaseCommand as
+										| BaseCommand.LEFT
+										| BaseCommand.RIGHT
+								],
+							),
 						commands: [
 							...robotState.commands,
 							{
@@ -162,55 +229,8 @@ const App: FunctionComponent = (): JSX.Element => {
 							},
 						],
 					});
-				} else
-					setRobotState({
-						...robotState,
-						error: Error.OUT_OF_BOUNDS,
-					});
+				}
 			}
-		}
-
-		// * * * * * * * * * * REPORT * * * * * * * * * * //
-		else if (inputBaseCommand === BaseCommandStr.REPORT) {
-			setRobotState({
-				...robotState,
-				error: null,
-				commands: [
-					...robotState.commands,
-					{
-						command: BaseCommand[inputBaseCommand as BaseCommand],
-						xPos: xPos,
-						yPos: yPos,
-						facing: facing,
-					},
-				],
-			});
-		}
-		// * * * * * * * * * * LEFT & RIGHT * * * * * * * * * * //
-		else if (
-			inputBaseCommand === BaseCommandStr.LEFT ||
-			inputBaseCommand === BaseCommandStr.RIGHT
-		) {
-			setRobotState({
-				...robotState,
-				error: null,
-				facing:
-					facing &&
-					getAdjacentOrientation(
-						facing,
-						BaseCommand[
-							inputBaseCommand as
-								| BaseCommand.LEFT
-								| BaseCommand.RIGHT
-						],
-					),
-				commands: [
-					...robotState.commands,
-					{
-						command: BaseCommand[inputBaseCommand as BaseCommand],
-					},
-				],
-			});
 		}
 	};
 

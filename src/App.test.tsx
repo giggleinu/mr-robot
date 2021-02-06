@@ -151,3 +151,37 @@ test('Clear console and history and PLACE robot again', () => {
 
     expect(screen.getByText(/PLACE 3, 2, NORTH/)).toBeInTheDocument();
 });
+
+test('Enter non PLACE command with parameters', () => {
+	render(<App />);
+	const inputElement = screen.getByPlaceholderText(
+		/what should mr robot do?/i,
+	);
+
+    fireEvent.change(inputElement, { target: { value: 'PLACE 2,2,EAST' } });
+
+	const runButton = screen.getByText(/run/i);
+    runButton.click();
+
+	fireEvent.change(inputElement, { target: { value: 'MOVE 2,2,EAST' } });
+    runButton.click();
+
+    expect(screen.getByText(/invalid command/i)).toBeInTheDocument();
+});
+
+test('Enter rubbish command', () => {
+	render(<App />);
+	const inputElement = screen.getByPlaceholderText(
+		/what should mr robot do?/i,
+	);
+
+    fireEvent.change(inputElement, { target: { value: 'PLACE 2,2,EAST' } });
+
+	const runButton = screen.getByText(/run/i);
+    runButton.click();
+
+	fireEvent.change(inputElement, { target: { value: 'RUBBISH' } });
+    runButton.click();
+
+    expect(screen.getByText(/invalid command/i)).toBeInTheDocument();
+});
